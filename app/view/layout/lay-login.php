@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link href="img/logo/logo.png" rel="icon">
+  <link href="<?php echo $__asset; ?>images/logo_lab.png" rel="icon">
   <title>E-Laboratorium Login</title>
   <link href="<?php echo $__asset; ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="<?php echo $__asset; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">

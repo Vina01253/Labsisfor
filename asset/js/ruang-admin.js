@@ -81,5 +81,6 @@ $('.popover-dismiss').popover({
 // Version in Sidebar
 
 var version = document.getElementById('version-ruangadmin');
-
-version.innerHTML = "Version 0.1 (beta)";
+if (version) {
+  version.innerHTML = "Version 0.1 (beta)";
+}
