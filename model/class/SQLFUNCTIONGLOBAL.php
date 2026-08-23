@@ -368,7 +368,7 @@
 
     function getuserenrolshortnameD($usernameiopp){
         Global $db;
-        $SQL_getuserenrolshortnameD = "SELECT DISTINCT COUNT(c.id) AS Jumlah, c.shortname FROM kelas_enrol a, kelas b, praktikum c WHERE a.username = '$usernameiopp' AND a.kelas_kode = b.kelas_kode AND b.praktikum_kode = c.praktikum_kode AND b.status = 'Aktif'";
+        $SQL_getuserenrolshortnameD = "SELECT COUNT(c.id) AS Jumlah, c.shortname FROM kelas_enrol a, kelas b, praktikum c WHERE a.username = '$usernameiopp' AND a.kelas_kode = b.kelas_kode AND b.praktikum_kode = c.praktikum_kode AND b.status = 'Aktif' GROUP BY c.shortname";
         $getuserenrolshortnameD = mysqli_query($db, $SQL_getuserenrolshortnameD);
         
         return $getuserenrolshortnameD;

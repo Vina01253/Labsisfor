@@ -3,7 +3,9 @@ include "config.php";
 
 global $arrayuserdatabyusername, $ALERT_inputloginkosong, $ALERT_inputloginusernamesalah, $ALERT_inputloginpasswordsalah;
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (isset($_SESSION['alert'])) {
     $alert =  $_SESSION['alert'];

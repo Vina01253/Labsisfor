@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 // masukkan DB
 $servername = "localhost";
-$database = "labsisfor";
+$database = "db_labsisfor";
 $username = "root";
 $password = "";
 
@@ -13,6 +13,7 @@ try {
     if (!$db) {
         throw new Exception(mysqli_connect_error());
     }
+    mysqli_query($db, "SET SESSION sql_mode = ''");
 } catch (Exception $errordb) {
     $errordatabase = $errordb->getMessage();
 
