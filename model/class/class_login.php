@@ -59,11 +59,11 @@ if (isset($_POST['login'])) {
 
     if ($usernamelogin == '' or $passwordlogin == '') {
         $_SESSION['alert'] = $ALERT_inputloginkosong;
-        header('location: index');
+        header('location: login');
     } else {
         if (empty($arrayuserdatabyusername['username'])) {
             $_SESSION['alert'] = $ALERT_inputloginusernamesalah;
-            header('location: index');
+            header('location: login');
         } elseif (!password_verify($passwordlogin, $arrayuserdatabyusername['password'])) {
             // Fallback: Cek apakah password di database masih menggunakan hash SHA-512 lama
             $enc_passlogin = hash_init('sha512');
@@ -79,7 +79,7 @@ if (isset($_POST['login'])) {
                 $arrayuserdatabyusername['password'] = $new_bcrypt_hash;
             } else {
                 $_SESSION['alert'] = $ALERT_inputloginpasswordsalah;
-                header('location: index');
+                header('location: login');
             }
         }
     }
