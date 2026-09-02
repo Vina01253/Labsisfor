@@ -26,23 +26,109 @@
       flex-direction: column;
     }
 
+    /* Hero Section with Auto-sliding Background Slideshow */
     .hero-section {
-      background: linear-gradient(135deg, #4e73df 0%, #224abe 50%, #0082c8 100%);
-      color: #ffffff;
-      padding: 60px 0 70px;
       position: relative;
+      background-color: #1a233a; /* Fallback background */
+      color: #ffffff;
+      padding: 65px 0 75px;
       overflow: hidden;
     }
 
-    .hero-section::before {
+    /* Slideshow Container */
+    .hero-slideshow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* Individual Slide */
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+      pointer-events: none;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .hero-slide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transform: scale(1.04);
+      transition: transform 6s ease-out;
+    }
+
+    .hero-slide.active .hero-slide-img {
+      transform: scale(1);
+    }
+
+    /* Dark Overlay with Theme Blue Gradient Blend */
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5); /* Required 50% dark overlay layer */
+      z-index: 2;
+    }
+
+    .hero-overlay::after {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+      background: linear-gradient(135deg, rgba(78, 115, 223, 0.5) 0%, rgba(34, 74, 190, 0.55) 50%, rgba(0, 130, 200, 0.5) 100%);
       pointer-events: none;
+    }
+
+    /* Hero Content Layer */
+    .hero-section .container {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Slide Navigation Indicators */
+    .slideshow-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .indicator-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .indicator-dot.active,
+    .indicator-dot:hover {
+      background: #ffffff;
+      width: 26px;
+      border-radius: 8px;
     }
 
     .logo-container {
@@ -213,8 +299,24 @@
     </div>
   </header>
 
-  <!-- Hero Header Section -->
+  <!-- Hero Header Section with Slideshow Background -->
   <section class="hero-section text-center">
+    <!-- Background Slideshow -->
+    <div class="hero-slideshow" aria-hidden="true">
+      <div class="hero-slide active">
+        <img src="<?php echo isset($__asset) ? $__asset : 'asset/'; ?>images/slideshow/slide1.jpg" alt="Lab Activity 1" class="hero-slide-img"> <!-- slide1.jpg --> <!-- TODO: replace with lab activity photo -->
+      </div>
+      <div class="hero-slide">
+        <img src="<?php echo isset($__asset) ? $__asset : 'asset/'; ?>images/slideshow/slide2.jpg" alt="Lab Activity 2" class="hero-slide-img"> <!-- slide2.jpg --> <!-- TODO: replace with lab activity photo -->
+      </div>
+      <div class="hero-slide">
+        <img src="<?php echo isset($__asset) ? $__asset : 'asset/'; ?>images/slideshow/slide3.jpg" alt="Lab Activity 3" class="hero-slide-img"> <!-- slide3.jpg --> <!-- TODO: replace with lab activity photo -->
+      </div>
+    </div>
+
+    <!-- Dark Overlay with Subtle Blue Gradient Blend -->
+    <div class="hero-overlay" aria-hidden="true"></div>
+
     <div class="container">
       <!-- HEADER LOGOS -->
       <div class="logo-container">
@@ -231,6 +333,14 @@
       <p class="hero-subtitle">
         Selamat Datang di Portal Praktikum dan Laboratorium <br/> Program Studi Sistem Informasi ITATS.
       </p>
+
+      <!-- Slideshow Navigation Indicators -->
+      <div class="slideshow-indicators" aria-label="Slideshow Indicators">
+        <span class="indicator-dot active" data-slide="0" title="Slide 1"></span>
+        <span class="indicator-dot" data-slide="1" title="Slide 2"></span>
+        <span class="indicator-dot" data-slide="2" title="Slide 3"></span>
+        <span class="indicator-dot" data-slide="3" title="Slide 4"></span>
+      </div>
     </div>
   </section>
 
@@ -288,6 +398,61 @@
   <!-- Scripts -->
   <script src="<?php echo isset($__asset) ? $__asset : 'asset/'; ?>vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo isset($__asset) ? $__asset : 'asset/'; ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Vanilla JS Auto-sliding Background Slideshow -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var slides = document.querySelectorAll('.hero-slideshow .hero-slide');
+      var dots = document.querySelectorAll('.slideshow-indicators .indicator-dot');
+      if (slides.length <= 1) return;
+
+      var currentSlide = 0;
+      var slideInterval = 5000; // Transitions automatically every 5 seconds
+      var timer = null;
+
+      function goToSlide(index) {
+        slides[currentSlide].classList.remove('active');
+        if (dots[currentSlide]) {
+          dots[currentSlide].classList.remove('active');
+        }
+
+        currentSlide = index;
+
+        slides[currentSlide].classList.add('active');
+        if (dots[currentSlide]) {
+          dots[currentSlide].classList.add('active');
+        }
+      }
+
+      function nextSlide() {
+        var next = (currentSlide + 1) % slides.length;
+        goToSlide(next);
+      }
+
+      function startSlideshow() {
+        stopSlideshow();
+        timer = setInterval(nextSlide, slideInterval);
+      }
+
+      function stopSlideshow() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      // Allow clicking dots to switch slides manually
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          var targetIndex = parseInt(this.getAttribute('data-slide'), 10);
+          goToSlide(targetIndex);
+          startSlideshow(); // Reset 5-second interval on interaction
+        });
+      });
+
+      startSlideshow();
+    });
+  </script>
 </body>
 
 </html>

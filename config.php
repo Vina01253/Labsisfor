@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 // masukkan DB
 $servername = "localhost";
-$database = "db_labsisfor";
+$database = "labsisfor";
 $username = "root";
 $password = "";
 
