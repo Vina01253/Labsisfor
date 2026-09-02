@@ -219,19 +219,17 @@
       <!-- HEADER LOGOS -->
       <div class="logo-container">
         <div class="logo-badge">
-          <!-- Logo Jurusan -->
-          <img src="asset/images/logo-jurusan.png" alt="Logo Jurusan" class="logo-img">
+          <img src="asset/images/logo-universitas.png" alt="Logo Universitas" class="logo-img">
         </div>
         <div class="logo-badge">
-          <!-- Logo Universitas -->
-          <img src="asset/images/logo-universitas.png" alt="Logo Universitas" class="logo-img">
+          <img src="asset/images/logo-jurusan.png" alt="Logo Jurusan" class="logo-img">
         </div>
       </div>
 
       <!-- HEADER TITLE -->
       <h1 class="hero-title text-white">E-Laboratorium Sistem Informasi</h1>
       <p class="hero-subtitle">
-        Selamat Datang di Portal Resmi Sistem Informasi Praktikum dan Laboratorium SISFOR Institut Teknologi Adhi Tama Surabaya.
+        Selamat Datang di Portal Praktikum dan Laboratorium <br/> Program Studi Sistem Informasi ITATS.
       </p>
     </div>
   </section>
