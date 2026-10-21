@@ -7,6 +7,30 @@
         exit();
     }
 
+    // ========================================================================
+    // [XAMPP-TWEAK] SINGLE-DEVICE LOCK (1 AKUN = 1 PERANGKAT)
+    // ========================================================================
+    // Blok ini adalah TEMPAT UTAMA pengekangan akses admin.
+    // Cukup panggil device_lock_enforce() di sini; semua halaman admin
+    // (home, list-user, periode, dst.) otomatis ikut terproteksi karena
+    // semuanya dirutekan lewat admin.php.
+    //
+    // Ingin mengubah kebijakan? Ubah hanya di file:
+    //   model/class/class_device_check.php
+    // ========================================================================
+    include __DIR__ . '/config.php';
+    include __DIR__ . '/model/class/class_device_check.php';
+
+    if (!device_lock_bypass()) {
+        // Auto-migrate: pastikan kolom session_device_id tersedia.
+        $chk_col = mysqli_query($db, "SHOW COLUMNS FROM user LIKE 'session_device_id'");
+        if ($chk_col && mysqli_num_rows($chk_col) === 0) {
+            mysqli_query($db, "ALTER TABLE user ADD COLUMN session_device_id VARCHAR(255) NULL DEFAULT NULL COMMENT 'Token perangkat terakhir yang login (single-device lock)'");
+        }
+
+        device_lock_enforce($db, $_SESSION['session_username'], 'login');
+    }
+
     define('__FOLDER_VIEW__', __DIR__ . '/app/view/');
     define('__FOLDER_LAYOUT__', __DIR__. '/app/view/layout/');
     define('__FOLDER_IMAGES__', __DIR__. '/asset/images/');

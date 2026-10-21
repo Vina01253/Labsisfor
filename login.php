@@ -1,4 +1,16 @@
 <?php
+    // ========================================================================
+    // [XAMPP-TWEAK] OUTPUT BUFFERING UNTUK REDIRECT LOGIN
+    // ------------------------------------------------------------------------
+    // Wajib ada di baris paling atas, SEBELUM output apa pun. Tanpa ini,
+    // header('location: ...') di class_login.php (yang di-include setelah HTML
+    // mulai dikirim) akan gagal dengan "headers already sent", sehingga
+    // redirect ke halaman admin / kembali ke login tidak berjalan.
+    // ========================================================================
+    if (!ob_get_level()) {
+        ob_start();
+    }
+
     define('__FOLDER_VIEW__', __DIR__ . '/app/view/');
     define('__FOLDER_LAYOUT__', __DIR__. '/app/view/layout/');
     define('__FOLDER_IMAGES__', __DIR__. '/asset/images/');

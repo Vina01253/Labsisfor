@@ -1,6 +1,6 @@
 <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
     <div class="<?php echo $SIDEBAR_background; ?>">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center bg-transparent"  href="index.php">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center bg-transparent"  href="<?php echo $LINK_home ?>">
         <div class="sidebar-brand-icon">
           <img class="rounded-circle" style="width: 35px; height: 35px; object-fit: fill;" src="<?php echo $pp ?>">
         </div>
@@ -10,7 +10,7 @@
     <div class="sticky-top navbar-nav">
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="index.php">
+        <a class="nav-link" href="<?php echo $LINK_home ?>">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
