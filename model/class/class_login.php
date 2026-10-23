@@ -1,5 +1,21 @@
 <?php
+// ============================================================================
+// [XAMPP-TWEAK] FIX: AKTIFKAN OUTPUT BUFFERING
+// ----------------------------------------------------------------------------
+// Kenapa perlu? File ini di-include oleh lay-login.php SETELAH beberapa baris
+// HTML dikirim ke browser. Tanpa output buffer, semua header('location: ...')
+// (redirect ke halaman admin / kembali ke login) akan GAGAL dengan warning
+// "headers already sent". Dengan ob_start(), redirect kembali normal di
+// lingkungan mana pun (Apache XAMPP maupun PHP built-in server).
+// ============================================================================
+if (!ob_get_level()) {
+    ob_start();
+}
+
 include "config.php";
+
+// [XAMPP-TWEAK] Muat helper single-device lock (1 akun = 1 perangkat).
+include_once __DIR__ . "/class_device_check.php";
 
 global $arrayuserdatabyusername, $ALERT_inputloginkosong, $ALERT_inputloginusernamesalah, $ALERT_inputloginpasswordsalah;
 
@@ -26,6 +42,29 @@ if (isset($_COOKIE['cookie_username'])) {
         $_SESSION['session_username'] = $cookie_username;
         $_SESSION['session_password'] = $cookie_password;
         $_SESSION['session_role'] = $resultlogincookie['role'];
+
+        // ================================================================
+        // [XAMPP-TWEAK] PEMULIHAN SESI DARI COOKIE
+        // ================================================================
+        // Cookie hanya hidup 1 menit (lihat setcookie di bawah), jadi blok ini
+        // jarang terpakai. Bila sesi dipulihkan dari cookie, perangkat ini
+        // tetap harus memegang token perangkat yang sah. Jika token perangkat
+        // sudah hilang / digantikan login lain, sesi tidak dipulihkan
+        // (pengguna harus login ulang).
+        // ================================================================
+        if (!device_lock_bypass()) {
+            $device_cookie = isset($_COOKIE[DEVICE_LOCK_COOKIE]) ? $_COOKIE[DEVICE_LOCK_COOKIE] : '';
+            $device_db_cookie = isset($resultlogincookie['session_device_id']) ? $resultlogincookie['session_device_id'] : null;
+
+            if (empty($device_cookie) || $device_db_cookie === null || !hash_equals($device_db_cookie, $device_cookie)) {
+                // Tidak sah -> batalkan pemulihan sesi, minta login ulang.
+                $_SESSION['session_username'] = "";
+                $_SESSION['session_password'] = "";
+                unset($_SESSION['session_role']);
+            } else {
+                $_SESSION['session_device_token'] = $device_cookie;
+            }
+        }
     }
 }
 
@@ -88,6 +127,21 @@ if (isset($_POST['login'])) {
         $_SESSION['session_username'] = $usernamelogin;
         $_SESSION['session_password'] = $arrayuserdatabyusername['password'];
         $_SESSION['session_role'] = $arrayuserdatabyusername['role'];
+
+        // ================================================================
+        // [XAMPP-TWEAK] KUNCI PERANGKAT (SINGLE-DEVICE LOCK)
+        // ================================================================
+        // Perangkat yang baru login ini didaftarkan sebagai SATU-SATUNYA
+        // perangkat sah untuk akun tersebut. Jika akun yang sama login dari
+        // perangkat lain, token lama tergantikan dan perangkat lama otomatis
+        // kehilangan akses (dikeluarkan saat membuka admin.php).
+        //
+        // Catatan: pembatasan berlaku untuk SEMUA akun (admin, ketualab,
+        // dosen, kooraslab, mahasiswa) karena dijalankan di titik login ini.
+        // Jika HANYA ingin membatasi akun admin, tambahkan syarat:
+        //   if ($arrayuserdatabyusername['role'] === 'admin') { ... }
+        // ================================================================
+        device_lock_claim_device($db, $usernamelogin);
 
         $cookie_name = 'cookie_username';
         $cookie_value = $usernamelogin;
