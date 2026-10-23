@@ -1687,6 +1687,7 @@
                                         <div class='form-group'>
                                             <label for='input-role-enrol'>Role <span class='text-danger'>*</span></label>
                                             <select class='form-control' name='inputroleenrol' id='input-role-enrol' required>
+                                                <option value='kooraslab'>Koor Aslab</option>
                                                 <option value='koorpraktikum'>Koorpraktikum</option>
                                                 <option value='aslab'>Aslab</option>
                                             </select>
@@ -2004,7 +2005,7 @@
                             $resultcekenrol2 = mysqli_fetch_assoc($cekenrol2);
 
                             if(($resultcekenrol0['Jumlah'] == 1) && ($resultcekenrol1['Jumlah'] == 0) && ($resultcekenrol2['Jumlah'] == 0)){
-                                if(($kolcsv[1] == "aslab") || ($kolcsv[1] == "koorpraktikum")){
+                                if(($kolcsv[1] == "aslab") || ($kolcsv[1] == "koorpraktikum") || ($kolcsv[1] == "kooraslab")){
                                     $SQL_insertpeserta = "INSERT INTO kelas_enrol(kelas_kode, username, role_kelas) VALUES('$getclassid', '$kolcsv[0]', '$kolcsv[1]')";
                                     $insertpeserta = mysqli_query($db, $SQL_insertpeserta);
                                 }else{
@@ -2054,15 +2055,15 @@
 
         if(($S_rolekelas == "koorpraktikum") || ($S_rolekelas == "KPMS")){
             if(($getdata == "mahasiswa") || ($getdata == "aslab")){
-                echo "<th>Aksi</th";
+                echo "<th>Aksi</th>";
             }
         }else if(($S_rolekelas == "kooraslab") || ($S_rolekelas == "KAMS")){
             if(($getdata == "mahasiswa") || ($getdata == "aslab") || ($getdata == "koorpraktikum") || ($getdata == "dosen")){
-                echo "<th>Aksi</th";
+                echo "<th>Aksi</th>";
             }
         }else if(($S_rolekelas == "ketualab") || ($S_rolekelas == "KLDS") || ($S_rolekelas == "admin")){
-            if(($getdata == "mahasiswa") || ($getdata == "aslab") || ($getdata == "koorpraktikum") || ($getdata == "dosen")){
-                echo "<th>Aksi</th";
+            if(($getdata == "mahasiswa") || ($getdata == "aslab") || ($getdata == "koorpraktikum") || ($getdata == "dosen") || ($getdata == "kooraslab")){
+                echo "<th>Aksi</th>";
             }
         }
     }
@@ -2588,7 +2589,7 @@
                     </td>";
                 }
             }else if(($S_rolekelas == "ketualab") || ($S_rolekelas == "KLDS") || ($S_rolekelas == "admin")){
-                if(($getdata == "mahasiswa") || ($getdata == "aslab") || ($getdata == "koorpraktikum") || ($getdata == "dosen")){
+                if(($getdata == "mahasiswa") || ($getdata == "aslab") || ($getdata == "koorpraktikum") || ($getdata == "dosen") || ($getdata == "kooraslab")){
                     echo "
                     <td>
                         <a href='#'><i class='fas fa-trash text-danger' data-toggle='modal' data-target='#hapuspeserta".$tagpst."'></i></a>
